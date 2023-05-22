@@ -6,7 +6,7 @@
 #include "Murmurhash.h"
 #include "Generator.h"
 
-template<class K, class D>
+template<class K=std::string, class D=int>
 struct Token {
     K key;
     D data;
@@ -30,7 +30,17 @@ public:
         elements_counter = num_of_el;
         table = std::make_unique<Dlist<Token<std::string, int>>[]>(sizeof_table);
     }
-    friend size_t Generator::gen_size(size_t elements);
     size_t How_many_el() const {return elements_counter;}
+    friend void fill_the_table(HashT& obj);
 };
+
+void fill_the_table(HashT& _table) {
+    const uint64_t SEED = 0;
+    for (size_t i = 0; i < _table.elements_counter; ++i) {
+        Token mint(Generator::gen_key<std::string>(),Generator::gen_data<int>());
+        uint64_t idx_temp = MurmurHash64A(&mint.key,mint.key.size(), SEED);
+        size_t idx_fin = idx_temp % _table.sizeof_table;
+        _table.table[idx_fin].push_front(mint);
+    }
+}
 #endif //ASD_LAB6_HASH_HASHTABLE_H
