@@ -1,5 +1,6 @@
 #ifndef ASD_LAB6_HASH_MURMURHASH_H
 #define ASD_LAB6_HASH_MURMURHASH_H
+#pragma once
 
 void SetAffinity ( int cpu );
 #include <cstdint>
