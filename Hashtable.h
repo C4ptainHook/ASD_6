@@ -11,6 +11,7 @@ struct Token {
     K key;
     D data;
 public:
+    Token()=default;
     Token(K,D);
 };
 
@@ -20,25 +21,60 @@ key = _key;
 data = _data;
 }
 
+template<class TData>
 class HashT {
     size_t sizeof_table;
     size_t elements_counter;
     std::unique_ptr<Dlist<Token<std::string, int>>[]> table;
 public:
+    static const uint64_t SEED;
     explicit HashT(size_t num_of_el) {
         sizeof_table = Generator::gen_size(num_of_el);
         elements_counter = num_of_el;
         table = std::make_unique<Dlist<Token<std::string, int>>[]>(sizeof_table);
     }
     size_t How_many_el() const {return elements_counter;}
-    friend void fill_the_table(HashT& obj);
+    template <class TKey, class TFindData>
+    friend TFindData& find(const HashT<TFindData>& _table, const TKey& key_to_search);
+    void add();
+    template<class U>
+    friend void fill_the_table(HashT<TData>&);
 };
 
-void fill_the_table(HashT& _table) {
-    const uint64_t SEED = 0;
+template<class TData>
+const uint64_t HashT<TData>::SEED = 0;
+
+template<class TData>
+void HashT<TData>::add() {
+    Token<> tok;
+    std::string k;
+    std::cout<<"Enter key of element\n";
+    std::getline(std::cin, tok.key);
+    std::cout<<"\nEnter data of element\n";
+    std::cin>>tok.data;
+    uint64_t idx_temp = MurmurHash64A(&tok.key,tok.key.size(), HashT::SEED);
+    size_t idx_fin = idx_temp % this->sizeof_table;
+    this->table[idx_fin].push_front(tok);
+}
+
+template<class TKey, class TData>
+TData& find(const HashT<TData>& _table, const TKey& key_to_search) {
+    uint64_t idx_temp = MurmurHash64A(&key_to_search, sizeof(TKey), HashT<TData>::SEED);
+    size_t idx_fin = idx_temp % _table.sizeof_table;
+    typename Dlist<Token<std::string, int>>::iterator it;
+    for (it = _table.table[idx_fin].begin(); it != _table.table[idx_fin].end(); ++it) {
+        if ((*it).key == key_to_search) {
+            return (*it).data;
+        }
+    }
+    throw std::runtime_error("No such element in the list!");
+}
+
+template<class TData>
+void fill_the_table(HashT<TData>& _table) {
     for (size_t i = 0; i < _table.elements_counter; ++i) {
         Token mint(Generator::gen_key<std::string>(),Generator::gen_data<int>());
-        uint64_t idx_temp = MurmurHash64A(&mint.key,mint.key.size(), SEED);
+        uint64_t idx_temp = MurmurHash64A(&mint.key,mint.key.size(), HashT<TData>::SEED);
         size_t idx_fin = idx_temp % _table.sizeof_table;
         _table.table[idx_fin].push_front(mint);
     }

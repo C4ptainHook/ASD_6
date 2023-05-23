@@ -1,6 +1,5 @@
 #ifndef ASD_LAB6_HASH_MURMURHASH_H
 #define ASD_LAB6_HASH_MURMURHASH_H
-#pragma once
 
 void SetAffinity ( int cpu );
 #include <cstdint>
@@ -19,7 +18,7 @@ FORCE_INLINE unsigned long long int rdtsc(){ unsigned long long int x; __asm__ v
 #define	ROTR32(x,y)	rotr32(x,y)
 #define ROTR64(x,y)	rotr64(x,y)
 #define BIG_CONSTANT(x) (x##LLU)
-#define _stricmp strcasecmp
+//#define _stricmp strcasecmp
 
 #endif //ASD_LAB6_HASH_MURMURHASH_H
 
