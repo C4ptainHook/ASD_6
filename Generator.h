@@ -7,7 +7,7 @@
 
 namespace Generator {
     template<class K>
-    K &gen_key() {
+    K gen_key() {
         K key;
         std::random_device rd;
         std::mt19937 gen(rd());
@@ -23,7 +23,7 @@ namespace Generator {
     }
 
     template<class D>
-    D &gen_data() {
+    D gen_data() {
         D data;
         std::random_device rd;
         std::mt19937 gen(rd());

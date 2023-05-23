@@ -23,6 +23,7 @@ data = _data;
 
 template<class TData>
 class HashT {
+public:
     size_t sizeof_table;
     size_t elements_counter;
     std::unique_ptr<Dlist<Token<std::string, int>>[]> table;
@@ -37,7 +38,7 @@ public:
     template <class TKey, class TFindData>
     friend TFindData& find(const HashT<TFindData>& _table, const TKey& key_to_search);
     void add();
-    template<class U>
+    template<typename U>
     friend void fill_the_table(HashT<TData>&);
 };
 
