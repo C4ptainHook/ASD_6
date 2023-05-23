@@ -3,10 +3,11 @@
 
 #include <random>
 
-#define COEF_OF_FULLNESS 0.7
+#define COEF_OF_FULLNESS 2
+
 namespace Generator {
     template<class K>
-    K &gen_key() {
+    K gen_key() {
         K key;
         std::random_device rd;
         std::mt19937 gen(rd());
@@ -22,7 +23,7 @@ namespace Generator {
     }
 
     template<class D>
-    D &gen_data() {
+    D gen_data() {
         D data;
         std::random_device rd;
         std::mt19937 gen(rd());
@@ -33,7 +34,7 @@ namespace Generator {
     size_t gen_size(size_t elements) {
         bool isPrime(size_t n);
         size_t findNextPrime(size_t value);
-        size_t table_length = static_cast<size_t>(static_cast<double >(elements) / COEF_OF_FULLNESS);
+        size_t table_length = static_cast<size_t>(static_cast<double>(elements) / COEF_OF_FULLNESS);
         table_length = findNextPrime(table_length);
         return table_length;
     }
