@@ -53,14 +53,15 @@ void HashT<TData>::add() {
     std::getline(std::cin, tok.key);
     std::cout<<"\nEnter data of element\n";
     std::cin>>tok.data;
-    uint64_t idx_temp = MurmurHash64A(&tok.key,tok.key.size(), HashT::SEED);
+    uint64_t idx_temp = MurmurHash64A(tok.key.data(),tok.key.size(), HashT::SEED);
     size_t idx_fin = idx_temp % this->sizeof_table;
     this->table[idx_fin].push_front(tok);
 }
 
 template<class TKey, class TData>
 TData& find(const HashT<TData>& _table, const TKey& key_to_search) {
-    uint64_t idx_temp = MurmurHash64A(&key_to_search, sizeof(TKey), HashT<TData>::SEED);
+    std::string key = key_to_search;
+    uint64_t idx_temp = MurmurHash64A(key.data(), key.size(), HashT<TData>::SEED);
     size_t idx_fin = idx_temp % _table.sizeof_table;
     typename Dlist<Token<std::string, int>>::iterator it;
     for (it = _table.table[idx_fin].begin(); it != _table.table[idx_fin].end(); ++it) {
